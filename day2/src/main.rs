@@ -1,27 +1,43 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-fn count_safe(reports: &Vec<String>) -> usize {
-    reports
-        .iter()
-        .filter(|r| is_safe(*r))
-        .count()
+fn read_report(line: &str) -> Vec<i32> {
+    line.split_whitespace()
+        .map(|s| s.parse::<i32>().unwrap())
+        .collect()
 }
 
-fn is_safe(line: &str) -> bool {
-    let list = line.split_whitespace().collect::<Vec<&str>>();
-
-    let distances: Vec<i32> = list
-        .windows(2)
-        .map(|e: &[&str]| e[1].parse::<i32>().unwrap() - e[0].parse::<i32>().unwrap())
-        .collect();
+fn find_unsafe_steps(steps: &Vec<i32>) -> Vec<usize> {
+    let distances: Vec<i32> = steps.windows(2).map(|e| e[1] - e[0]).collect();
 
     let sign: i32 = distances[0].signum();
 
-    distances.into_iter().all(|d| {
-        let val = sign * d;
-        val > 0 && val <= 3
-    })
+    distances
+        .into_iter()
+        .enumerate()
+        .filter(|t| {
+            let val = sign * t.1;
+            val <= 0 || val > 3
+        })
+        .map(|t| t.0)
+        .collect()
+}
+
+fn is_safe(steps: &Vec<i32>) -> bool {
+    find_unsafe_steps(&steps).is_empty()
+}
+
+fn is_safe_with_dampener(steps: &Vec<i32>) -> bool {
+    for i in 0..steps.len() {
+        let mut v = steps.clone();
+        v.remove(i);
+
+        if is_safe(&v) {
+            return true
+        }
+    }
+
+    false
 }
 
 fn main() {
@@ -33,9 +49,14 @@ fn main() {
         .map(|s| s.expect("Failed to read file"))
         .collect();
 
-    let part_1 = count_safe(&reports);
+    let part_1 = reports.iter().filter(|r| is_safe(&read_report(r))).count();
+    let part_2 = reports
+        .iter()
+        .filter(|r| is_safe_with_dampener(&read_report(r)))
+        .count();
 
     println!("Part 1: {}", part_1);
+    println!("Part 2: {}", part_2);
 }
 
 #[cfg(test)]
@@ -54,26 +75,27 @@ mod test {
     #[test]
     fn give_lines_validate_safe_check() {
         // safe
-        assert!(is_safe(TEST1[0]));
-        assert!(is_safe(TEST1[5]));
+        assert!(is_safe(&read_report(TEST1[0])));
+        assert!(is_safe(&read_report(TEST1[5])));
 
         // unsafe
-        assert!(!is_safe(TEST1[1]));
-        assert!(!is_safe(TEST1[2]));
-        assert!(!is_safe(TEST1[3]));
-        assert!(!is_safe(TEST1[4]));
+        assert!(!is_safe(&read_report(TEST1[1])));
+        assert!(!is_safe(&read_report(TEST1[2])));
+        assert!(!is_safe(&read_report(TEST1[3])));
+        assert!(!is_safe(&read_report(TEST1[4])));
     }
 
     #[test]
-    fn give_test1_expect_2() {
-        let mut reports: Vec<String> = Vec::new();
+    fn give_lines_validate_safe_check_with_dampener() {
+        // safe
+        assert!(is_safe_with_dampener(&read_report(TEST1[0])));
+        assert!(is_safe_with_dampener(&read_report(TEST1[3])));
+        assert!(is_safe_with_dampener(&read_report(TEST1[4])));
+        assert!(is_safe_with_dampener(&read_report(TEST1[5])));
 
-        for line in TEST1 {
-            reports.push(String::from(line));
-        }
-
-        let r = count_safe(&reports);
-
-        assert_eq!(r, 2)
+        // unsafe
+        assert!(!is_safe_with_dampener(&read_report(TEST1[1])));
+        assert!(!is_safe_with_dampener(&read_report(TEST1[2])));
     }
+
 }
