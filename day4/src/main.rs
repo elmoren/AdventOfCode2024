@@ -1,7 +1,7 @@
 struct Puzzle {
     rows: usize,
     columns: usize,
-    puzzle: Vec<char>
+    puzzle: Vec<char>,
 }
 
 trait CrosswordPuzzle {
@@ -70,13 +70,10 @@ impl CrosswordPuzzle for Puzzle {
                 }
 
                 for f in filters.iter() {
-                    let found = to_check
-                        .chars()
-                        .enumerate()
-                        .all(|(i, c)| {
-                            let fc = f.chars().nth(i).unwrap();
-                            fc == '.' || fc== c
-                        });
+                    let found = to_check.chars().enumerate().all(|(i, c)| {
+                        let fc = f.chars().nth(i).unwrap();
+                        fc == '.' || fc == c
+                    });
                     if found {
                         matches += 1;
                     }
@@ -117,13 +114,19 @@ fn init_puzzle(puzzle: &str) -> Puzzle {
     let rows = puzzle.lines().count();
     let columns = puzzle.lines().next().unwrap().len();
     let mut p = Vec::new();
-    puzzle.chars().filter(|c| !c.is_whitespace() ).for_each(|c| p.push(c));
+    puzzle
+        .chars()
+        .filter(|c| !c.is_whitespace())
+        .for_each(|c| p.push(c));
 
-    return Puzzle { rows, columns, puzzle: p };
+    return Puzzle {
+        rows,
+        columns,
+        puzzle: p,
+    };
 }
 
 fn main() {
-
     let input = std::fs::read_to_string("input.txt").expect("Error reading input.txt");
     let puzzle = init_puzzle(&input);
 
@@ -156,9 +159,9 @@ MXMXAXMASX";
         assert_eq!("MMMSXXMASMMSAMXMSMSAAMXSXMAAMMMSAMASMSMXXMASAMXAMMXXAMMXXAMASMSMSASXSSSAXAMASAAAMAMMMXMMMMMXMXAXMASX", p.puzzle.iter().collect::<String>());
         assert_eq!(p.rows, 10);
         assert_eq!(p.columns, 10);
-        assert_eq!(*p.char_at(0,0).unwrap(), 'M');
-        assert_eq!(*p.char_at(4,7).unwrap(), 'A');
-        assert_eq!(*p.char_at(9,9).unwrap(), 'X');
+        assert_eq!(*p.char_at(0, 0).unwrap(), 'M');
+        assert_eq!(*p.char_at(4, 7).unwrap(), 'A');
+        assert_eq!(*p.char_at(9, 9).unwrap(), 'X');
         assert!(p.char_at(10, 10).is_none());
     }
 
@@ -182,5 +185,4 @@ MXMXAXMASX";
         let p: Puzzle = init_puzzle(INPUT_1);
         assert_eq!(p.find_x_mas(), 9);
     }
-
 }
