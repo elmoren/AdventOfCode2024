@@ -55,16 +55,21 @@ fn read_map(input: &str) -> Map {
 fn find_antinodes(antennas: &Vec<Point>, p: &Point, rows: usize, cols: usize) -> Vec<Point> {
     let mut anodes = Vec::new();
     for a in antennas {
-        let n1 = calc_antinode(a, p, rows as isize, cols as isize);
-        let n2 = calc_antinode(p, a, rows as isize, cols as isize);
+        // let n1 = calc_antinode(a, p, rows as isize, cols as isize);
+        // let n2 = calc_antinode(p, a, rows as isize, cols as isize);
 
-        if let Some(tmp) = n1 {
-            anodes.push(tmp);
-        }
+        // if let Some(tmp) = n1 {
+        //     anodes.push(tmp);
+        // }
+        //
+        // if let Some(tmp) = n2 {
+        //     anodes.push(tmp);
+        // }
 
-        if let Some(tmp) = n2 {
-            anodes.push(tmp);
-        }
+        let mut n1: Vec<Point> = calc_antinode_p2(a, p, rows as isize, cols as isize);
+        let mut n2: Vec<Point> = calc_antinode_p2(p, a, rows as isize, cols as isize);
+        anodes.append(&mut n1);
+        anodes.append(&mut n2);
     }
     return anodes;
 }
@@ -83,6 +88,29 @@ fn calc_antinode(p1: &Point, p2: &Point, max_rows: isize, max_cols: isize) -> Op
     }
 
     return None;
+}
+
+fn calc_antinode_p2(p1: &Point, p2: &Point, max_rows: isize, max_cols: isize) -> Vec<Point> {
+    let mut r = Vec::new();
+    let dx = p2.row as isize - p1.row as isize;
+    let dy = p2.col as isize - p1.col as isize;
+
+    // Include the directional antenna 😔
+    r.push(Point {
+        row: p2.row,
+        col: p2.col,
+    });
+
+    let mut tmp = (p2.row as isize + dx, p2.col as isize + dy);
+    while (0..max_rows).contains(&tmp.0) && (0..max_cols).contains(&tmp.1) {
+        r.push(Point {
+            row: tmp.0 as usize,
+            col: tmp.1 as usize,
+        });
+        tmp = (tmp.0 + dx, tmp.1 + dy);
+    }
+
+    return r;
 }
 
 fn main() {
@@ -111,14 +139,14 @@ mod test {
 ............";
 
     #[test]
-    fn test_part1() {
+    fn test_init() {
         let m = read_map(TEST_INPUT);
 
-        println!("{:#?}", m);
-        assert_eq!(m.antinodes.len(), 14);
-        assert_eq!(m.antennas.len(), 2);
         assert_eq!(m.rows, 12);
         assert_eq!(m.cols, 12);
+        assert_eq!(m.antennas.len(), 2);
+        // assert_eq!(m.antinodes.len(), 14);
+        assert_eq!(m.antinodes.len(), 34);
     }
 
     #[test]
@@ -156,6 +184,27 @@ mod test {
         assert_eq!(
             calc_antinode(&Point { row: 2, col: 2 }, &Point { row: 8, col: 8 }, 10, 10),
             None
+        );
+    }
+
+    #[test]
+    fn test_calc_antinodes_2() {
+        assert_eq!(
+            calc_antinode_p2(&Point { row: 3, col: 3 }, &Point { row: 2, col: 2 }, 6, 6),
+            vec![
+                Point { row: 2, col: 2 },
+                Point { row: 1, col: 1 },
+                Point { row: 0, col: 0 },
+            ]
+        );
+
+        assert_eq!(
+            calc_antinode_p2(&Point { row: 2, col: 2 }, &Point { row: 3, col: 3 }, 6, 6),
+            vec![
+                Point { row: 3, col: 3 },
+                Point { row: 4, col: 4 },
+                Point { row: 5, col: 5 },
+            ]
         );
     }
 }
