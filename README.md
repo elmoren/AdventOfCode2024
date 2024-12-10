@@ -9,3 +9,6 @@ This year I am doing the advent of code in Rust
 5. HashMap, HashSet, and "let Some(_) = returns_option() else { ... }"
 6. Enum, PartialEq, and Result
 7. Recursion - Took longer than I care to admit to figure this one out
+8. The point where the antennas also become antinodes was annoying.
+9. Rust's VecDeques are awesome. LinkList probably would have worked better in this case.
+10. 
