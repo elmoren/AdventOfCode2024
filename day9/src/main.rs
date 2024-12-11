@@ -50,7 +50,6 @@ fn fragment(dm: &mut DiskMap) {
 fn defragment_whole_files(dm: &mut DiskMap) {
     dm.files.sort_by_key(|f| f.id);
     for f in &mut dm.files.iter_mut().rev() {
-        println!("File Id: {:?}", f.id);
         let mut part: &mut (u32, u32) = f.parts.get_mut(0).unwrap();
         if part.1 == 0 {
             continue;
