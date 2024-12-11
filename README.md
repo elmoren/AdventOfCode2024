@@ -12,4 +12,4 @@ This year I am doing the advent of code in Rust
 8. The point where the antennas also become antinodes was annoying.
 9. Rust's VecDeques are awesome. LinkList probably would have worked better in this case.
 10. This one was pretty fun. Breadth first search
-11. 
+11. Memoize by grouping rocks with the same value
