@@ -10,7 +10,7 @@ This year I am doing the advent of code in Rust
 6. Enum, PartialEq, and Result
 7. Recursion - Took longer than I care to admit to figure this one out
 8. The point where the antennas also become antinodes was annoying.
-9. Rust's VecDeques are awesome. LinkList probably would have worked better in this case.
+9. Rust's VecDeques are awesome. A LinkedList probably would have worked better in this case.
 10. This one was pretty fun. Breadth first search
 11. Memoize by grouping rocks with the same value
 12. Flood fill using breadth first algorithm, calc perimeter as you add. Needed a hint for part 2.
