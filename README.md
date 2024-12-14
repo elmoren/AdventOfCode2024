@@ -14,4 +14,5 @@ This year I am doing the advent of code in Rust
 10. This one was pretty fun. Breadth first search
 11. Memoize by grouping rocks with the same value
 12. Flood fill using breadth first algorithm, calc perimeter as you add. Needed a hint for part 2.
-13. 
+13. Had to remember how to solve systems of linear equations. Found Cramer's rule and determinants. Not the pretties code.
+14. 
