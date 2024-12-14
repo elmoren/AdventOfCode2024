@@ -48,6 +48,10 @@ fn read_games(input: &str) -> Vec<Game> {
         }
     }
 
+    if !tmp.is_empty() {
+        games.push(read_game(tmp.as_str()));
+    }
+
     games
 }
 
