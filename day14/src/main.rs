@@ -103,9 +103,50 @@ fn main() {
             .collect::<Vec<Robot>>()
     };
 
-    room.tick(100);
-    println!("Part 1: {}", room.safety_factor());
+    // room.tick(100);
+    // println!("Part 1: {}", room.safety_factor());
 
+    let mut avg_x: f64 = 50.0;
+    let mut avg_y: f64 = 51.0;
+    let mut var_x: f64 = 0.0;
+    let mut var_y: f64 = 0.0;
+
+    for r in &mut room.robots {
+        var_x += (r.position.x as f64 - avg_x).powi(2);
+        var_y += (r.position.y as f64 - avg_y).powi(2);
+    }
+    var_x = var_x / room.robots.len() as f64;
+    var_y = var_y / room.robots.len() as f64;
+
+    let stddev_x = var_x.sqrt();
+    let stddev_y = var_y.sqrt();
+
+    println!("varx, {}, vary {}", var_x, var_y);
+    println!("stddev x, {}, stddev y {}", stddev_x, stddev_y);
+
+    let mut i = 0;
+    loop {
+        let mut var_x: f64 = 0.0;
+        let mut var_y: f64 = 0.0;
+        for r in &mut room.robots {
+            var_x += (r.position.x as f64 - avg_x).powi(2);
+            var_y += (r.position.y as f64 - avg_y).powi(2);
+        }
+
+        var_x = var_x / room.robots.len() as f64;
+        var_y = var_y / room.robots.len() as f64;
+
+        println!("varx, {}, vary {}", var_x, var_y);
+
+        if var_x < 600.0 && var_y < 600.0 {
+            break;
+        }
+        room.tick(1);
+        i += 1;
+    }
+
+    room.print();
+    println!("Part 2: {}", i);
 }
 
 #[cfg(test)]

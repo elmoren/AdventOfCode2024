@@ -15,4 +15,5 @@ This year I am doing the advent of code in Rust
 11. Memoize by grouping rocks with the same value
 12. Flood fill using breadth first algorithm, calc perimeter as you add. Needed a hint for part 2.
 13. Had to remember how to solve systems of linear equations. Found Cramer's rule and determinants. Not the pretties code.
-14. Modulo calculations, 
+14. Modulo calculations for part 1. Calculated average x,y variance over 100 runs and picked if both were less than 600 variance.
+15. 
